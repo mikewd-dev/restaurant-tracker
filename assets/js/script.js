@@ -5,9 +5,7 @@ $(".main_icon").on("click",function(){
 });
 
 
-
-mapboxgl.accessToken ="pk.eyJ1Ijoia3JheXppZWphbWFhIiwiYSI6ImNsbTk3N3liNzBoOXgzcHFxcnYxbzFlZGoifQ.CFAObEgH4I_ADDAdhMOR1Q";
-
+mapboxgl.accessToken ="pk.eyJ1Ijoia3JheXppZWphbWFhIiwiYSI6ImNtZXZrdDdtbDA5eGYyaXIyMHQ2MWlsbzEifQ.G7Jxi4RsTkW9jJzLsa6pog"
 let map;
 let geocoder;
 let markers = [];
