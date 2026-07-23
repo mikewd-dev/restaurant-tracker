@@ -49,53 +49,38 @@ $("#restaurant_name").on("keypress", function (event) {
 });
 
 
-function fetch_restaurant_details(restaurant_name) {
-  var apiKey = "3827cbc66amshf758c3e48924cb7p170ae8jsn2a2b032f2a9e";
-  var url = "https://local-business-data.p.rapidapi.com/search?query=" + encodeURIComponent(restaurant_name + " london") + "&language=en";
+function fetch_restaurant_details(restaurant_name){
+    var apiKey = "e1832098f3msh86ffcf963a57162p1e1a4fjsnf4a5c9eb3ca5";
 
-  fetch(url, {
-    method: "GET",
-    headers: {
-      "X-RapidAPI-Key": apiKey,
-      "X-RapidAPI-Host": "local-business-data.p.rapidapi.com"
-    }
-  })
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (data) {
+    var url = "https://local-business-data.p.rapidapi.com/search?query=" + encodeURIComponent(restaurant_name + " london") + "&language=en";
 
-      if (data && data.data && data.data.length > 0) {
-        markers.forEach(function(marker) {
-          marker.remove();
-        });
-        markers = []; 
-
-        data.data.forEach(function(place) {
-          if (place.latitude && place.longitude) {
-            addMarker(place);
-          }
-        });
-
-        var topResult = data.data[0];
-        display_restaurant_html(topResult);
-
-        if (map && topResult.latitude && topResult.longitude) {
-          map.flyTo({
-            center: [topResult.longitude, topResult.latitude],
-            zoom: 12, 
-            essential: true,
-          });
-        }
-      } else {
-        alert("No restaurants found or API limit reached.");
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "X-RapidAPI-Key": apiKey,
+        "X-RapidAPI-Host": "local-business-data.p.rapidapi.com"
       }
     })
-    .catch(function (error) {
-      console.error("API Error:", error);
+    .then(function(response){
+      return response.json();
+    })
+    .then(function(data){
+      if (data && data.data && data.data.length > 0) {
+        var result = data.data[0];
+        console.log(result);
+        display_restaurant_html(result);
+        
+        if (result.latitude && result.longitude) {
+          addMarker(result);
+        }
+      } else {
+        console.log("No data found or rate limit hit.");
+      }
+    })
+    .catch(function(error){
+      console.error(error);
     });
-}
-
+  }
 function display_restaurant_html(restaurant) {
   var restaurantsection = $('.restaurant_section');
   restaurantsection.empty();
