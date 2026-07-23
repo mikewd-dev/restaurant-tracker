@@ -64,6 +64,7 @@ function fetch_restaurant_details(restaurant_name) {
       return response.json();
     })
     .then(function (data) {
+
       if (data && data.data && data.data.length > 0) {
         markers.forEach(function(marker) {
           marker.remove();
@@ -170,44 +171,29 @@ function display_modal(restaurantName, restaurant_photo, restaurant_hours) {
   }
 }
 
-$(document).on("click", "#submit_feedback", function (event) {
-  event.preventDefault();
-  
-  var restaurant_name = $(".restaurant_name").text();
-  var restaurant_description = $(".restaurant_description").text();
-  var restaurant_website = $(".restaurant_website_link").attr("href");
-  var restaurant_photo = $(".restaurant_photo").attr("src");
-  var FeedBack_text = $("#FeedBack_text").val();
+$(document).ready(function () {
+  if ($("#map").length) {
+    map = new mapboxgl.Map({
+      container: "map",
+      style: "mapbox://styles/mapbox/streets-v12",
+      center: [-0.127647, 51.537322],
+      zoom: 11,
+    });
 
-  $("#FeedBack_text").val("");
-
-  var feedbackData = {
-    name: restaurant_name,
-    description: restaurant_description,
-    website: restaurant_website,
-    photo: restaurant_photo,
-    feedback: FeedBack_text,
-  };
-
-  var existingData = localStorage.getItem("Restaurants");
-  var feedbackArray = [];
-
-  if (existingData) {
-    try {
-      feedbackArray = JSON.parse(existingData);
-      if (!Array.isArray(feedbackArray)) {
-        feedbackArray = [];
+    setTimeout(function () {
+      if (map) {
+        map.resize();
       }
-    } catch (error) {
-      feedbackArray = [];
-    }
+    }, 500);
   }
 
-  feedbackArray.push(feedbackData);
-  localStorage.setItem("Restaurants", JSON.stringify(feedbackArray));
-  alert("Restaurant and feedback saved successfully!");
+  var savedRestaurants = JSON.parse(localStorage.getItem("Restaurants"));
+  if (savedRestaurants && savedRestaurants.length > 0) {
+    display_restaurant_data(savedRestaurants);
+  } else {
+    console.log("No restaurant data found");
+  }
 });
-
 
 function zoomToLocation(latitude, longitude, name, website) {
   if (!map) return;
