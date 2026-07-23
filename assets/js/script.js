@@ -50,27 +50,21 @@ $("#restaurant_name").on("keypress", function (event) {
 
 
 function fetch_restaurant_details(restaurant_name) {
-  var apiKey = "a7d57b6e34msh3eedafe5dcd0145p15a33bjsnfc7c89ef779e";
-  var url = "https://local-business-data.p.rapidapi.com/search?query=" + encodeURIComponent(restaurant_name + " london") + "&language=en";
+  var workerUrl = "https://restaurant-proxy.restaurant-tracker1.workers.dev?query=" + encodeURIComponent(restaurant_name + " london");
 
-  fetch(url, {
-    method: "GET",
-    headers: {
-      "X-RapidAPI-Key": apiKey,
-      "X-RapidAPI-Host": "local-business-data.p.rapidapi.com"
-    }
-  })
+  fetch(workerUrl)
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
-
       if (data && data.data && data.data.length > 0) {
+        // Clear existing markers
         markers.forEach(function(marker) {
           marker.remove();
         });
         markers = []; 
 
+        // Add new markers from worker data
         data.data.forEach(function(place) {
           if (place.latitude && place.longitude) {
             addMarker(place);
@@ -88,7 +82,7 @@ function fetch_restaurant_details(restaurant_name) {
           });
         }
       } else {
-        alert("No restaurants found or API limit reached.");
+        alert("No restaurants found.");
       }
     })
     .catch(function (error) {
