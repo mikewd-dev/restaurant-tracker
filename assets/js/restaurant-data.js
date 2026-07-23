@@ -1,64 +1,40 @@
-  
-  // Header logo Function
-  $(".main_icon").on("click",function(){
-    window.location.href = "index.html";
+document.addEventListener("DOMContentLoaded", () => {
+  const restRow = document.querySelector(".rest-row");
+
+  const visitedRestaurants = JSON.parse(localStorage.getItem("Restaurants")) || [];
+
+  restRow.innerHTML = "";
+
+  if (visitedRestaurants.length === 0) {
+    restRow.innerHTML = `<p class="text-muted">No visited restaurants added yet. Search and save some from the map!</p>`;
+    return;
+  }
+
+  visitedRestaurants.forEach((restaurant) => {
+    const colDiv = document.createElement("div");
+    colDiv.className = "col-lg-4 col-md-6 col-12 mb-4";
+
+    // Use the saved 'photo' property, with a fallback image if it's missing
+    const restaurantPhoto = restaurant.photo || "assets/images/restaurant.jpg";
+
+    colDiv.innerHTML = `
+      <div class="restaurant_card h-100">
+        <img src="${restaurant.photos_sample && restaurant.photos_sample.length > 0 
+    ? restaurant.photos_sample[0].photo_url_large 
+    : "assets/images/restaurant.jpg"}" class="rest_list_img img-fluid" alt="Restaurant Image" />
+        <div class="restaurant_body p-3">
+          <h3 class="rest_name">${restaurant.name}</h3>
+          <p class="rest_des">${restaurant.description || 'No description available.'}</p>
+          <ul class="rest_ul list-unstyled">
+            <li><p class="rest_hours">Hours Today: ${restaurant.hours || 'N/A'}</p></li>
+            <li><a href="${restaurant.website || '#'}" target="_blank">Website</a></li>
+          </ul>
+          <p class="feedback_text fw-bold mb-1">FeedBack</p>
+          <p class="Get_feedback">${restaurant.feedback || 'No feedback yet.'}</p>
+        </div>
+      </div>
+    `;
+
+    restRow.appendChild(colDiv);
+  });
 });
-
-// Function to retrive data from local Storage
-var restaurant = JSON.parse(localStorage.getItem("Restaurants"));
-console.log(restaurant)
-
-
-
-
-// Check if the 'restaurant' array is not empty before displaying data
-if (restaurant && restaurant.length > 0) {
-  display_restaurant_data(restaurant);
-} else {
-  // If the array is empty, display a message or handle it as needed
-  console.log("No restaurant data found");
-}
-
-// Function to update restaurant card UI
-function display_restaurant_data(restaurant) {
-
-for(var i=0; i<restaurant.length; i++)
-{
-
-// Select the container where the restaurant card will be appended
-var rest_row = $('.rest-row');
-
-// Getting value from the api
-var restaurantName = restaurant[i].name;
-
-var restaurantDes = restaurant[i].description;
-
-var restaurant_website =  restaurant[i].website;
-var restaurant_photo = restaurant[i].photo;
-var restaurant_feedback = restaurant[i].feedback;
-
-
-// Append a new restaurant card to the container
-rest_row.append(`
-<div class="col-lg-4 col-md-6 col-12">
-<!-- Restaurant card -->
-<div class="restaurant_card">
-<img src="${restaurant_photo}" class="rest_list_img" alt="Restaurant Image" />
-<div class="restaurant_body">
-<!-- Restaurant name -->
-<h3 class="rest_name">${restaurantName}</h3>
-<!-- Restaurant description -->
-<p class="rest_des">${restaurantDes}</p>
-<ul class="rest_ul">
-<li><a href="${restaurant_website}">Website</a></li>
-</ul>
-<!-- Feedback section -->
-<p class="feedback_text">FeedBack</p>
-<p class="Get_feedback">${restaurant_feedback}</p>
-</div>
-</div>
-</div>
-`);
-
-}
-}
