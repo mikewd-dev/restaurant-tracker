@@ -64,7 +64,7 @@ function fetch_restaurant_details(restaurant_name) {
       return response.json();
     })
     .then(function (data) {
-      if (data.data && data.data.length > 0) {
+      if (data && data.data && data.data.length > 0) {
         markers.forEach(function(marker) {
           marker.remove();
         });
@@ -87,7 +87,7 @@ function fetch_restaurant_details(restaurant_name) {
           });
         }
       } else {
-        alert("No restaurants found.");
+        alert("No restaurants found or API limit reached.");
       }
     })
     .catch(function (error) {
