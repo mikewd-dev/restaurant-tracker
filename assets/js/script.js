@@ -222,10 +222,10 @@ function zoomToLocation(latitude, longitude, name, website) {
 function addMarker(place) {
   if (!map) return;
 
-  var restaurantName = place.name;
-  var restaurantWebsite = place.website || "#";
-  var latitude = place.latitude;
-  var longitude = place.longitude;
+  var latitude = place.latitude || place.lat;
+  var longitude = place.longitude || place.lng;
+
+  if (!latitude || !longitude) return;
 
   const marker = new mapboxgl.Marker()
     .setLngLat({ lng: longitude, lat: latitude })
@@ -240,7 +240,6 @@ function addMarker(place) {
     }, 500);
   });
 }
-
 
 function display_restaurant_data(restaurants) {
   var rest_row = $('.rest-row');
