@@ -51,33 +51,34 @@ $("#restaurant_name").on("keypress", function (event) {
 
 function fetch_restaurant_details(restaurant_name) {
   var apiKey = "3827cbc66amshf758c3e48924cb7p170ae8jsn2a2b032f2a9e";
-  var url = "https://local-business-data.p.rapidapi.com/search?query=" + restaurant_name + " london&language=en&rapidapi-key=" + apiKey;
+  var url = "https://local-business-data.p.rapidapi.com/search?query=" + encodeURIComponent(restaurant_name + " london") + "&language=en";
 
-  fetch(url)
+  fetch(url, {
+    method: "GET",
+    headers: {
+      "X-RapidAPI-Key": apiKey,
+      "X-RapidAPI-Host": "local-business-data.p.rapidapi.com"
+    }
+  })
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
       if (data.data && data.data.length > 0) {
-        
-
         markers.forEach(function(marker) {
           marker.remove();
         });
         markers = []; 
 
-    
-       data.data.forEach(function(place) {
+        data.data.forEach(function(place) {
           if (place.latitude && place.longitude) {
             addMarker(place);
           }
         });
 
-  
         var topResult = data.data[0];
         display_restaurant_html(topResult);
 
-  
         if (map && topResult.latitude && topResult.longitude) {
           map.flyTo({
             center: [topResult.longitude, topResult.latitude],
@@ -85,7 +86,6 @@ function fetch_restaurant_details(restaurant_name) {
             essential: true,
           });
         }
-
       } else {
         alert("No restaurants found.");
       }
