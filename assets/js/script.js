@@ -51,7 +51,7 @@ $("#restaurant_name").on("keypress", function (event) {
 
 function fetch_restaurant_details(restaurant_name) {
   var workerUrl = "https://restaurant-proxy.restaurant-tracker1.workers.dev?query=" + encodeURIComponent(restaurant_name + " london");
-
+ console.log("FETCHING FROM WORKER URL: ", workerUrl);
   fetch(workerUrl)
     .then(function (response) {
       return response.json();
